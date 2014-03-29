@@ -734,7 +734,7 @@ cc2420_interrupt(void)
 
   list_add(rf_list, rf);
 
-  len -= AUX_LEN;
+  len -= FOOTER_LEN;
   len_a = len > FIFOP_THRESHOLD ? FIFOP_THRESHOLD : len;
   len_b = len - len_a;
   rf->len = len;
@@ -796,7 +796,7 @@ cc2420_interrupt(void)
   }
 
   int overflow = CC2420_FIFOP_IS_1 && !CC2420_FIFO_IS_1;
-  CC2420_READ_RAM_BYTE(footer1, RXFIFO_ADDR(len + AUX_LEN));
+  CC2420_READ_RAM_BYTE(footer1, RXFIFO_ADDR(len + FOOTER_LEN));
 
   if(!overflow && (footer1 & FOOTER1_CRC_OK)) { /* CRC is correct */
     if(do_ack) {
@@ -959,6 +959,10 @@ PROCESS_THREAD(cc2420_process, ev, data)
 static int
 cc2420_read(void *buf, unsigned short bufsize)
 {
+#if CC2420_CONF_CHECKSUM
+  uint16_t checksum;
+  uint16_t checksum2;
+#endif /* CC2420_CONF_CHECKSUM */
   GET_LOCK();
   struct received_frame_s *rf = list_pop(rf_list);
   if(rf == NULL) {
@@ -969,12 +973,25 @@ cc2420_read(void *buf, unsigned short bufsize)
       /* If there are other packets pending, poll */
       process_poll(&cc2420_process);
     }
-    int len = rf->len;
+    int len = rf->len - CHECKSUM_LEN;
     if(len > bufsize) {
       memb_free(&rf_memb, rf);
       RELEASE_LOCK();
       return 0;
     }
+
+#if CC2420_CONF_CHECKSUM
+    memcpy(&checksum, rf->buf+len, 2);
+    checksum2 = crc16_data(rf->buf, len, 0);
+    //printf("type: %u checksum:%u %u\n", rf->buf[0] & 7, checksum, checksum2);
+    if ((rf->buf[0] & 7) != 2 && checksum != checksum2) {
+      printf("BAD checksum. type %u, checksum:%u %u\n", rf->buf[0] & 7, checksum, checksum2);
+      memb_free(&rf_memb, rf);
+      RELEASE_LOCK();
+      return 0;
+    }
+#endif /* CC2420_CONF_CHECKSUM */
+
     memcpy(buf, rf->buf, len);
     current_is_acked = rf->acked;
     memb_free(&rf_memb, rf);
