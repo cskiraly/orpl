@@ -3,7 +3,7 @@
 #include "net/packetbuf.h"
 #include "net/rpl/rpl.h"
 #if IN_COOJA
-#define DEBUG DEBUG_ANNOTATE
+#define DEBUG DEBU_NONE
 //#define DEBUG DEBUG_NONE
 #else
 #define DEBUG DEBUG_NONE
@@ -363,13 +363,13 @@ void bloom_broacast_failed() {
 }
 
 void bloom_request_broadcast() {
-  printf("Bloom: requesting broadcast\n");
+//  printf("Bloom: requesting broadcast\n");
   ctimer_set(&broadcast_bloom_timer, random_rand() % (4 * NETSTACK_RDC.channel_check_interval()), bloom_do_broadcast, NULL);
 }
 
 void
 anycast_trickle_callback(rpl_instance_t *instance) {
-  printf("Anycast: trickle callback");
+//  printf("Anycast: trickle callback");
   rpl_trace(NULL);
   curr_instance = instance;
   curr_dag = instance ? instance->current_dag : NULL;
@@ -394,7 +394,7 @@ anycast_trickle_callback(rpl_instance_t *instance) {
 
 #endif
 
-  update_e2e_edc(1);
+  update_e2e_edc(0);
 }
 
 void anycast_init(int is_sink) {
