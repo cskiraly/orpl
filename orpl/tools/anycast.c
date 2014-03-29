@@ -379,8 +379,8 @@ anycast_trickle_callback(rpl_instance_t *instance) {
 
 #if FREEZE_TOPOLOGY == 0
   /* Bloom filter ageing */
-  printf("Bloom: swapping\n");
-  bloom_swap(&dbf);
+//  printf("Bloom: swapping\n");
+//  bloom_swap(&dbf);
 #endif
 
   bloom_request_broadcast();
