@@ -14,7 +14,7 @@ void set_addr_iid(uip_ipaddr_t *ipaddr, uint16_t id);
 void node_ip6addr(uip_ipaddr_t *ipaddr, uint16_t id);
 void rpl_setup(int is_root, uint16_t id);
 
-#define APP_PAYLOAD_LEN 64
+#define APP_PAYLOAD_LEN 16
 struct app_data {
   uint32_t seqno;
   uint16_t src;
