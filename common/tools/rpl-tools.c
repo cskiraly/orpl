@@ -59,7 +59,7 @@ struct app_data *rpl_dataptr_from_uip() {
 
 /*---------------------------------------------------------------------------*/
 struct app_data *rpl_dataptr_from_packetbuf() {
-  if(packetbuf_datalen() < 64) return 0;
+  if(packetbuf_datalen() < APP_PAYLOAD_LEN) return 0;
   return (struct app_data *)((char*)packetbuf_dataptr() + ((packetbuf_datalen() - APP_PAYLOAD_LEN - 1)));
 }
 
