@@ -380,9 +380,11 @@ anycast_trickle_callback(rpl_instance_t *instance) {
   check_neighbors();
 
 #if FREEZE_TOPOLOGY == 0
+#ifndef BLOOM_NOSWAP
   /* Bloom filter ageing */
-//  printf("Bloom: swapping\n");
-//  bloom_swap(&dbf);
+  printf("Bloom: swapping\n");
+  bloom_swap(&dbf);
+#endif
 #endif
 
   bloom_request_broadcast();
