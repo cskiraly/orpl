@@ -235,8 +235,12 @@ int test_prr(uint16_t count, uint16_t threshold) {
 
 void
 received_noip() {
-  packetbuf_copyto(&bloom_broadcast);
-  bloom_received(&bloom_broadcast);
+  if (packetbuf_totlen() == sizeof(bloom_broadcast)) {
+    packetbuf_copyto(&bloom_broadcast);
+    bloom_received(&bloom_broadcast);
+  } else {
+    printf("Received noIP: wrong size (%u), not a Bloom message\n", packetbuf_totlen());
+  }
 }
 
 //static void
