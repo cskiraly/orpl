@@ -57,7 +57,9 @@ struct bloom_broadcast_s {
   uint16_t rank;
   union {
     bloom_filter filter;
+#ifndef BLOOM_NOPAD
     uint8_t padding[64];
+#endif
   };
 };
 
