@@ -80,7 +80,7 @@
 
 //#define CC2420_TXPOWER_MAX  31
 //#define CC2420_TXPOWER_MIN   0
-#define RF_POWER                31
+//#define RF_POWER                31
 //#define RF_POWER                7
 
 /* 32-bit rtimer */

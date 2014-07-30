@@ -338,7 +338,7 @@ cc2420_init(void)
   cc2420_set_pan_addr(0xffff, 0x0000, NULL);
   cc2420_set_channel(26);
 
-  cc2420_set_txpower(RF_POWER);
+  //cc2420_set_txpower(RF_POWER);
 
   cc2420_set_cca_threshold(-32 + RSSI_THR);
 
